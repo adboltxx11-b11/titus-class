@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titus Class - مسابقات الكنيسة</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+                        url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Divine_Mercy_Image_from_Sanctuary_in_Krak%C3%B3w-Borek_Fa%C5%82%C4%99cki.jpg/800px-Divine_Mercy_Image_from_Sanctuary_in_Krak%C3%B3w-Borek_Fa%C5%82%C4%99cki.jpg') center/cover fixed;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Top Header & Terminal Trigger */
+        header {
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .three-dots-btn {
+            background: none;
+            border: none;
+            color: #f8fafc;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .three-dots-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f59e0b;
+        }
+
+        .btn-logout {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+
+        /* Auth Container */
+        .auth-container {
+            width: 90%;
+            max-width: 420px;
+            margin: auto;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            margin-top: 5rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .auth-tab.active {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.6);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #f59e0b;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #f59e0b;
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .auth-btn:hover {
+            background: #d97706;
+        }
+
+        .alert-box {
+            padding: 10px;
+            border-radius: 6px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Main Content Dashboard */
+        .dashboard {
+            width: 90%;
+            max-width: 900px;
+            margin: 2rem auto;
+            display: none;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 158, 11, 0.5);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .quiz-card h3 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .quiz-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-card .card-meta {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 8px;
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-start:hover {
+            opacity: 0.9;
+        }
+
+        .del-checkbox {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 22px;
+            height: 22px;
+            accent-color: #ef4444;
+            cursor: pointer;
+            display: none;
+        }
+
+        .del-mode-bar {
+            display: none;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-ok-del {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-ok-del:hover {
+            background: #dc2626;
+        }
+
+        /* Quiz View */
+        .quiz-view {
+            width: 90%;
+            max-width: 700px;
+            margin: 2rem auto;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .quiz-progress {
+            font-size: 0.9rem;
+            color: #f59e0b;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .option-item {
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-item:hover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .option-item.selected {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-next {
+            background: #f59e0b;
+            color: #0f172a;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Quiz Result Card */
+        .result-view {
+            text-align: center;
+            display: none;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            color: #f59e0b;
+            margin-bottom: 1rem;
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #10b981;
+        }
+
+        /* Terminal Drawer Overlay */
+        .terminal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .terminal-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .terminal-box {
+            position: fixed;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 650px;
+            background: #090d16;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            z-index: 201;
+            overflow: hidden;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: monospace;
+        }
+
+        .terminal-box.active {
+            top: 10%;
+        }
+
+        .terminal-header {
+            background: #1e293b;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-title {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-close {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 1.2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .terminal-body {
+            padding: 15px;
+            min-height: 200px;
+            max-height: 350px;
+            overflow-y: auto;
+            color: #38bdf8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .terminal-input-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
+            direction: ltr;
+        }
+
+        .terminal-prompt {
+            color: #22c55e;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #f8fafc;
+            font-family: monospace;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Modal for Trash / Restore */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 300;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            width: 90%;
+            max-width: 500px;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .trash-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .trash-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+        }
+
+        .btn-restore {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-cross"></i> Titus Class
+        </div>
+        <div class="user-nav">
+            <span id="user-display" style="display: none; color: #cbd5e1; font-weight: bold;"></span>
+            <button class="three-dots-btn" id="terminal-trigger" title="فتح التيرمينال">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+            <button class="btn-logout" id="logout-btn" style="display: none;" onclick="logout()">خروج</button>
+        </div>
+    </header>
+
+    <!-- Auth Container -->
+    <div class="auth-container" id="auth-section">
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</div>
+            <div class="auth-tab" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</div>
+        </div>
+
+        <div class="alert-box" id="auth-alert"></div>
+
+        <form id="auth-form" onsubmit="handleAuth(event)">
+            <div class="form-group">
+                <label>اسم المستخدم (Username)</label>
+                <input type="text" id="auth-username" required autocomplete="off" placeholder="ادخل اسمك هنا...">
+            </div>
+            <div class="form-group">
+                <label>كلمة السر (Password)</label>
+                <input type="password" id="auth-password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="auth-btn" id="auth-submit-btn">إنشاء حساب (Sign Up)</button>
+        </form>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard" id="dashboard-section">
+        <div class="del-mode-bar" id="del-bar">
+            <span><i class="fa-solid fa-trash"></i> حدد المسابقات المراد حذفها:</span>
+            <button class="btn-ok-del" onclick="confirmDelete()">OK</button>
+        </div>
+
+        <div class="section-title">
+            <span>المسابقات المتاحة</span>
+        </div>
+
+        <div class="quiz-grid" id="quiz-container">
+            <!-- Dynamic Quizzes Rendered Here -->
+        </div>
+    </div>
+
+    <!-- Active Quiz View -->
+    <div class="quiz-view" id="quiz-view-section">
+        <div class="quiz-progress" id="quiz-progress-text">سؤال 1 من 7</div>
+        <div class="question-text" id="question-text">نص السؤال يظهر هنا...</div>
+        <div class="options-list" id="options-container">
+            <!-- Dynamic Options -->
+        </div>
+        <div class="quiz-actions">
+            <button class="btn-next" id="next-btn" onclick="nextQuestion()">التالي</button>
+        </div>
+    </div>
+
+    <!-- Quiz Result View -->
+    <div class="quiz-view result-view" id="result-section">
+        <div class="result-icon"><i class="fa-solid fa-trophy"></i></div>
+        <h2>أحسنت! أكملت المسابقة</h2>
+        <div class="result-score" id="result-score-text">0 / 7</div>
+        <p style="color: #cbd5e1; margin-bottom: 1.5rem;">تم تسجيل درجتك بنجاح!</p>
+        <button class="btn-start" onclick="showDashboard()">العودة للمسابقات</button>
+    </div>
+
+    <!-- Terminal Drawer Overlay -->
+    <div class="terminal-overlay" id="terminal-overlay" onclick="closeTerminal()"></div>
+    <div class="terminal-box" id="terminal-box">
+        <div class="terminal-header">
+            <div class="terminal-title">
+                <i class="fa-solid fa-terminal"></i> Command Terminal
+            </div>
+            <button class="terminal-close" onclick="closeTerminal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+            <div>System initialized. Type standard commands:</div>
+            <div style="color: #64748b;">(أوامر الدرجات: 'scores', 'grade', 'الدرجات' | أمر الحذف: 'del')</div>
+        </div>
+        <div class="terminal-input-row">
+            <span class="terminal-prompt">&gt;</span>
+            <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" placeholder="اكتب الأمر هنا..." onkeypress="handleTerminalCommand(event)">
+        </div>
+    </div>
+
+    <!-- Trash / Deleted Quizzes Modal -->
+    <div class="modal-overlay" id="trash-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-trash-can"></i> سلة المحذوفات</h3>
+                <button class="terminal-close" onclick="closeTrashModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">قائمة المسابقات التي تم حذفها مؤخراً:</p>
+            <div class="trash-list" id="trash-list-container">
+                <!-- Deleted items injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API FX ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'finish') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const noteOsc = audioCtx.createOscillator();
+                    const noteGain = audioCtx.createGain();
+                    noteOsc.connect(noteGain);
+                    noteGain.connect(audioCtx.destination);
+                    noteOsc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.1);
+                    noteGain.gain.setValueAtTime(0.15, audioCtx.currentTime + idx * 0.1);
+                    noteGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + idx * 0.1 + 0.25);
+                    noteOsc.start(audioCtx.currentTime + idx * 0.1);
+                    noteOsc.stop(audioCtx.currentTime + idx * 0.1 + 0.25);
+                });
+            }
+        }
+
+        // --- Data & State ---
+        const DEFAULT_QUIZ = {
+            id: 'titus_class_01',
+            title: 'titus class',
+            description: 'مسابقة الرسالة إلى تيطس - اختبر معلوماتك الكتابية والإيمانية',
+            questions: [
+                {
+                    text: 'لمن كتبت الرسالة وما هو الهدف الرئيسي منها؟',
+                    options: [
+                        'كتبت لتيموثاوس لتعليمه كيفية بناء الأسوار.',
+                        'كتبت لتيطس لتنظيم الكورسات التدريبية في روما.',
+                        'كتبت لتيطس لترتيب الأمور الكنسية وتعيين قسوس في المدن ومواجهة التعليم الكاذب.',
+                        'كتبت لأهل كريت لجمع التبرعات فقط.'
+                    ],
+                    correctIndex: 2
+                },
+                {
+                    text: 'ما هي الظروف التي جعلت بولس يترك تيطس في مدينة كريت؟',
+                    options: [
+                        'بسبب سفر بولس المفاجئ لزيارة عائلته في طرسوس.',
+                        'لأن جزيرة كريت كانت بحاجة لترتيب الأمور الكنسية وتركها بولس ليكمل هذا العمل بعد مغادرته.',
+                        'لأن تيطس طلب منه ذلك لقضاء إجازة هناك.',
+                        'لأن أهل كريت طلبوا من تيطس أن يكون حاكماً عليهم.'
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    text: 'إيه اللي كلف بولس الرسول بيه تيطس بخصوص الكنيسة؟',
+                    options: [
+                        'بناء مباني جديدة وكبيرة لكل كنيسة.',
+                        'جمع الأموال لشراء أراضٍ في كريت.',
+                        'إقامة شيوخ (قسوس) في كل مدينة حسب الوصايا وتدبير أمور الخدمة.',
+                        'السفر فوراً إلى أورشليم لمقابلة الرسل.'
+                    ],
+                    correctIndex: 2
+                },
+                {
+                    text: 'بولس كان عايز تيطس يعمل إيه في مدينة كريت؟',
+                    options: [
+                        'أن ينظم الكنائس ويرد على المعلمين الكذبة ويضبط التعليم الصحيح.',
+                        'أن يجمع أموالاً للتجارة.',
+                        'أن يترك الجزيرة فوراً ولا يعود إليها.',
+                        'أن يبني مدارس لتعليم الفلسفة.'
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    text: 'في رسالة بولس لتيموثاوس (الإصحاح الأول)، بولس وصف نفسه بإيه؟',
+                    options: [
+                        'رسول يسوع المسيح بحسب حسبة الناس.',
+                        'معلم الفلسفة الكبرى.',
+                        'رسول يسوع المسيح حسب إيمان مختار الله ومعرفة الحق الذي هو للتقوى.',
+                        'خادم عادي في الكنيسة.'
+                    ],
+                    correctIndex: 2
+                },
+                {
+                    text: 'احنا اتعلمنا إيه من تيطس وأفعاله؟',
+                    options: [
+                        'الأمانة في العمل، الطاعة للوصية، والقدوة الحس حسنة في الخدمة والتعليم الصحيح.',
+                        'كيف نترك المسؤوليات للآخرين ونستريح.',
+                        'كيفية جمع الأموال بطرق سريعة.',
+                        'السفر المستمر دون هدف.'
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    text: 'من هو الذي كتب الرسالة لتيطس؟',
+                    options: [
+                        'القديس بطرس الرسول.',
+                        'الرسول بولس.',
+                        'القديس يوحنا الإنجيلي.',
+                        'القديس مرقس الرسول.'
+                    ],
+                    correctIndex: 1
+                }
+            ]
+        };
+
+        let currentAuthTab = 'signup';
+        let currentUser = null;
+        let activeQuiz = null;
+        let currentQuestionIdx = 0;
+        let currentScore = 0;
+        let selectedOption = null;
+        let isDeleteMode = false;
+
+        // --- App Initializer ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initStorage();
+            checkSession();
+        });
+
+        function initStorage() {
+            if (!localStorage.getItem('tc_users')) {
+                localStorage.setItem('tc_users', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('tc_quizzes')) {
+                localStorage.setItem('tc_quizzes', JSON.stringify([DEFAULT_QUIZ]));
+            }
+            if (!localStorage.getItem('tc_trash')) {
+                localStorage.setItem('tc_trash', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('tc_scores')) {
+                localStorage.setItem('tc_scores', JSON.stringify([]));
+            }
+        }
+
+        function checkSession() {
+            const savedUser = sessionStorage.getItem('tc_active_user');
+            if (savedUser) {
+                currentUser = savedUser;
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        }
+
+        // --- Auth Mechanics ---
+        function switchAuthTab(tab) {
+            playSound('click');
+            currentAuthTab = tab;
+            document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+            document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+            document.getElementById('auth-submit-btn').innerText = tab === 'signup' ? 'إنشاء حساب (Sign Up)' : 'تسجيل الدخول (Sign In)';
+            hideAlert();
+        }
+
+        function showAlert(msg) {
+            const alertBox = document.getElementById('auth-alert');
+            alertBox.innerText = msg;
+            alertBox.style.display = 'block';
+        }
+
+        function hideAlert() {
+            document.getElementById('auth-alert').style.display = 'none';
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            playSound('click');
+            hideAlert();
+
+            const username = document.getElementById('auth-username').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+
+            if (!username || !password) {
+                showAlert('برجاء كتابة الاسم وكلمة السر.');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('tc_users'));
+
+            if (currentAuthTab === 'signup') {
+                const existingUser = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                if (existingUser) {
+                    showAlert('خطأ: هذا الاسم مُستخدم بالفعل! اختر اسم مستخدم آخر.');
+                    return;
+                }
+
+                users.push({ username, password });
+                localStorage.setItem('tc_users', JSON.stringify(users));
+                currentUser = username;
+                sessionStorage.setItem('tc_active_user', username);
+                showDashboard();
+            } else {
+                const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                if (!user) {
+                    showAlert('خطأ! هذا الحساب غير موجود. يجب عليك عمل Sign Up أولاً لإنشاء حساب.');
+                    return;
+                }
+                if (user.password !== password) {
+                    showAlert('خطأ! كلمة السر غير صحيحة.');
+                    return;
+                }
+
+                currentUser = user.username;
+                sessionStorage.setItem('tc_active_user', username);
+                showDashboard();
+            }
+        }
+
+        function logout() {
+            playSound('click');
+            sessionStorage.removeItem('tc_active_user');
+            currentUser = null;
+            showAuth();
+        }
+
+        function showAuth() {
+            document.getElementById('auth-section').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('quiz-view-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('user-display').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'none';
+            document.getElementById('auth-username').value = '';
+            document.getElementById('auth-password').value = '';
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('quiz-view-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'none';
+
+            const userDisplay = document.getElementById('user-display');
+            userDisplay.innerText = `أهلاً، ${currentUser}`;
+            userDisplay.style.display = 'inline';
+            document.getElementById('logout-btn').style.display = 'inline-block';
+
+            renderQuizzes();
+        }
+
+        // --- Quizzes Rendering ---
+        function renderQuizzes() {
+            const quizzes = JSON.parse(localStorage.getItem('tc_quizzes')) || [];
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            if (quizzes.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 2rem;">لا توجد مسابقات حالياً. يمكنك استرجاع المسابقات المحذوفة من التيرمينال أو السلة.</div>`;
+                return;
+            }
+
+            quizzes.forEach(quiz => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.innerHTML = `
+                    <input type="checkbox" class="del-checkbox" value="${quiz.id}" style="display: ${isDeleteMode ? 'block' : 'none'}">
+                    <div>
+                        <h3>${quiz.title}</h3>
+                        <p>${quiz.description}</p>
+                    </div>
+                    <div>
+                        <div class="card-meta"><i class="fa-solid fa-list-check"></i> ${quiz.questions.length} أسئلة</div>
+                        <button class="btn-start" onclick="startQuiz('${quiz.id}')">ابدأ المسابقة</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- Quiz Flow ---
+        function startQuiz(quizId) {
+            playSound('click');
+            const quizzes = JSON.parse(localStorage.getItem('tc_quizzes'));
+            activeQuiz = quizzes.find(q => q.id === quizId);
+
+            if (!activeQuiz) return;
+
+            currentQuestionIdx = 0;
+            currentScore = 0;
+
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('quiz-view-section').style.display = 'block';
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            selectedOption = null;
+            const q = activeQuiz.questions[currentQuestionIdx];
+
+            document.getElementById('quiz-progress-text').innerText = `سؤال ${currentQuestionIdx + 1} من ${activeQuiz.questions.length}`;
+            document.getElementById('question-text').innerText = q.text;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const item = document.createElement('div');
+                item.className = 'option-item';
+                item.innerHTML = `<span>${opt}</span><i class="fa-regular fa-circle"></i>`;
+                item.onclick = () => selectOption(idx, item);
+                container.appendChild(item);
+            });
+
+            document.getElementById('next-btn').innerText = (currentQuestionIdx === activeQuiz.questions.length - 1) ? 'إنهاء المسابقة' : 'التالي';
+        }
+
+        function selectOption(idx, el) {
+            playSound('click');
+            selectedOption = idx;
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('selected');
+                item.querySelector('i').className = 'fa-regular fa-circle';
+            });
+            el.classList.add('selected');
+            el.querySelector('i').className = 'fa-solid fa-circle-check';
+        }
+
+        function nextQuestion() {
+            if (selectedOption === null) {
+                alert('برجاء اختيار إجابة أولاً!');
+                return;
+            }
+
+            const q = activeQuiz.questions[currentQuestionIdx];
+            if (selectedOption === q.correctIndex) {
+                playSound('correct');
+                currentScore++;
+            } else {
+                playSound('wrong');
+            }
+
+            currentQuestionIdx++;
+
+            if (currentQuestionIdx < activeQuiz.questions.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            playSound('finish');
+            // Save score to system database
+            const scores = JSON.parse(localStorage.getItem('tc_scores')) || [];
+            scores.push({
+                username: currentUser,
+                quizTitle: activeQuiz.title,
+                score: currentScore,
+                total: activeQuiz.questions.length,
+                date: new Date().toLocaleDateString('ar-EG')
+            });
+            localStorage.setItem('tc_scores', JSON.stringify(scores));
+
+            document.getElementById('quiz-view-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            document.getElementById('result-score-text').innerText = `${currentScore} / ${activeQuiz.questions.length}`;
+        }
+
+        // --- Terminal Mechanics ---
+        const terminalTrigger = document.getElementById('terminal-trigger');
+        terminalTrigger.addEventListener('click', () => {
+            playSound('click');
+            openTerminal();
+        });
+
+        function openTerminal() {
+            document.getElementById('terminal-overlay').classList.add('active');
+            document.getElementById('terminal-box').classList.add('active');
+            document.getElementById('terminal-input').focus();
+        }
+
+        function closeTerminal() {
+            playSound('click');
+            document.getElementById('terminal-overlay').classList.remove('active');
+            document.getElementById('terminal-box').classList.remove('active');
+        }
+
+        function handleTerminalCommand(e) {
+            if (e.key === 'Enter') {
+                playSound('click');
+                const input = document.getElementById('terminal-input');
+                const cmd = input.value.trim();
+                input.value = '';
+
+                if (!cmd) return;
+
+                printTerminalOutput(`> ${cmd}`);
+                processCommand(cmd.toLowerCase());
+            }
+        }
+
+        function printTerminalOutput(text, isHtml = false) {
+            const body = document.getElementById('terminal-body');
+            const div = document.createElement('div');
+            if (isHtml) {
+                div.innerHTML = text;
+            } else {
+                div.innerText = text;
+            }
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function processCommand(cmd) {
+            if (cmd === 'scores' || cmd === 'grade' || cmd === 'الدرجات') {
+                const scores = JSON.parse(localStorage.getItem('tc_scores')) || [];
+                if (scores.length === 0) {
+                    printTerminalOutput('No records found in database.');
+                    return;
+                }
+
+                // Sort scores descending
+                scores.sort((a, b) => (b.score / b.total) - (a.score / a.total));
+
+                let tableHtml = `<div style="color: #f59e0b; font-weight: bold; margin-top: 5px;">--- Leaderboard & Scores ---</div>`;
+                scores.forEach((s, idx) => {
+                    let rankBadge = `#${idx + 1}`;
+                    if (idx === 0) rankBadge = '🥇 #1';
+                    else if (idx === 1) rankBadge = '🥈 #2';
+                    else if (idx === 2) rankBadge = '🥉 #3';
+
+                    tableHtml += `
+                        <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #334155;">
+                            <span>${rankBadge} <b>${s.username}</b> (${s.quizTitle})</span>
+                            <span style="color: #10b981;">${s.score}/${s.total} صح</span>
+                        </div>
+                    `;
+                });
+                printTerminalOutput(tableHtml, true);
+            } else if (cmd === 'del') {
+                isDeleteMode = true;
+                document.getElementById('del-bar').style.display = 'flex';
+                renderQuizzes();
+                printTerminalOutput('Delete selection mode ENABLED. Select quizzes and click OK on dashboard.');
+                closeTerminal();
+            } else if (cmd === 'clear') {
+                document.getElementById('terminal-body').innerHTML = '';
+            } else {
+                printTerminalOutput(`Command not recognized: '${cmd}'. Available commands: scores, del, clear`);
+            }
+        }
+
+        // --- Multi-Delete & Restore Flow ---
+        function confirmDelete() {
+            playSound('click');
+            const checkboxes = document.querySelectorAll('.del-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if (selectedIds.length === 0) {
+                alert('لم تقم بتحديد أي مسابقة للحذف!');
+                return;
+            }
+
+            let quizzes = JSON.parse(localStorage.getItem('tc_quizzes')) || [];
+            let trash = JSON.parse(localStorage.getItem('tc_trash')) || [];
+
+            const toDelete = quizzes.filter(q => selectedIds.includes(q.id));
+            quizzes = quizzes.filter(q => !selectedIds.includes(q.id));
+            trash.push(...toDelete);
+
+            localStorage.setItem('tc_quizzes', JSON.stringify(quizzes));
+            localStorage.setItem('tc_trash', JSON.stringify(trash));
+
+            isDeleteMode = false;
+            document.getElementById('del-bar').style.display = 'none';
+            renderQuizzes();
+            openTrashModal();
+        }
+
+        function openTrashModal() {
+            const trash = JSON.parse(localStorage.getItem('tc_trash')) || [];
+            const container = document.getElementById('trash-list-container');
+            container.innerHTML = '';
+
+            if (trash.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#94a3b8;">سلة المحذوفات فارغة.</div>`;
+            } else {
+                trash.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'trash-item';
+                    div.innerHTML = `
+                        <span>${item.title}</span>
+                        <button class="btn-restore" onclick="restoreQuiz('${item.id}')">استرجاع</button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById('trash-modal').style.display = 'flex';
+        }
+
+        function closeTrashModal() {
+            playSound('click');
+            document.getElementById('trash-modal').style.display = 'none';
+        }
+
+        function restoreQuiz(quizId) {
+            playSound('click');
+            let quizzes = JSON.parse(localStorage.getItem('tc_quizzes')) || [];
+            let trash = JSON.parse(localStorage.getItem('tc_trash')) || [];
+
+            const itemToRestore = trash.find(q => q.id === quizId);
+            if (!itemToRestore) return;
+
+            trash = trash.filter(q => q.id !== quizId);
+            quizzes.push(itemToRestore);
+
+            localStorage.setItem('tc_quizzes', JSON.stringify(quizzes));
+            localStorage.setItem('tc_trash', JSON.stringify(trash));
+
+            renderQuizzes();
+            openTrashModal();
+        }
+    </script>
+</body>
+</html>
